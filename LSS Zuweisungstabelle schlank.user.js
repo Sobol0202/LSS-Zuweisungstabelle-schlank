@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LSS Zuweisungstabelle schlank
 // @namespace    www.leitstellenspiel.de
-// @version      0.9
+// @version      1.0
 // @description  Macht die Personalzuweisungstabelle in den Fahrzeugen etwas schlanker
 // @author       MissSobol
 // @match        https://www.leitstellenspiel.de/vehicles/*/zuweisung
@@ -11,16 +11,16 @@
 (function() {
     'use strict';
 
-    // Füge den Button-Styling-CSS hinzu
-    GM_addStyle(`
-        .btn-xs {
-            margin-right: 5px;
-        }
-    `);
-
     // Funktion zum Aktualisieren des Button-Stylings
-    function updateButtonStyling() {
-        //console.log("Update Button Styling");
+    function updateButtonStyling(mutationsList) {
+        console.log("Update Button Styling");
+
+        // Füge den Button-Styling-CSS hinzu
+        GM_addStyle(`
+            .btn-xs {
+                margin-right: 5px;
+            }
+        `);
 
         // Wähle die Tabelle mit der id "personal_table"
         var personalTable = document.getElementById("personal_table");
@@ -37,14 +37,14 @@
 
                 // Überprüfe, ob das letzte td-Element existiert und ob es einen Button enthält
                 if (lastTd && lastTd.querySelector("a.btn")) {
-                    //console.log("Button gefunden");
+                    console.log("Button gefunden");
 
                     // Wähle den Button im letzten td-Element
                     var button = lastTd.querySelector("a.btn");
 
                     // Überprüfe, ob die Klasse des Buttons "btn-xs" vorhanden ist
                     if (!button.classList.contains("btn-xs")) {
-                        //console.log("Button Klasse wird aktualisiert");
+                        console.log("Button Klasse wird aktualisiert");
                         // Füge der Klasse des Buttons "btn-xs" hinzu
                         button.classList.add("btn-xs");
 
@@ -53,16 +53,16 @@
 
                         // Überprüfe, ob sowohl Button als auch Text existieren
                         if (button && text) {
-                            //console.log("Button und Text vorhanden");
+                            console.log("Button und Text vorhanden");
 
                             // Entferne den Zeilenumbruch zwischen Button und Text
                             if (button.nextSibling && button.nextSibling.nodeName === "#text") {
-                                //console.log("Entferne Zeilenumbruch");
+                                console.log("Entferne Zeilenumbruch");
                                 button.parentNode.removeChild(button.nextSibling);
                             }
                             // Drehe die Reihenfolge von Button und Text um
                             lastTd.insertBefore(button, text);
-                            //console.log("Button-Styling aktualisiert");
+                            console.log("Button-Styling aktualisiert");
                         }
                     }
                 }
@@ -70,15 +70,24 @@
         }
     }
 
-    // Funktion zum regelmäßigen Überprüfen von Änderungen am Button
-    function checkForButtonChanges() {
-        // Rufe die Funktion zum Aktualisieren des Button-Stylings auf
-        updateButtonStyling();
+    // Funktion zur Initialisierung des MutationObservers
+    function observeChanges() {
+        // Wähle das Ziel-Element (die Tabelle mit der id "personal_table")
+        var targetNode = document.getElementById('personal_table');
 
-        // Überprüfe alle 1 Sekunden auf Änderungen am Button
-        setTimeout(checkForButtonChanges, 1000);
+        // Konfiguration des Observers
+        var config = { childList: true, subtree: true };
+
+        // Erstelle eine Instanz des MutationObservers und übergebe ihm die Callback-Funktion
+        var observer = new MutationObserver(updateButtonStyling);
+
+        // Starte den Observer und überwache Änderungen im Ziel-Element
+        observer.observe(targetNode, config);
     }
 
-    // Starte die Überprüfung von Änderungen am Button
-    checkForButtonChanges();
+    // Führe die Initialisierung aus, um Änderungen an der Tabelle zu überwachen
+    observeChanges();
+
+    // Führe das Update des Button-Stylings beim initialen Laden der Seite aus
+    updateButtonStyling();
 })();
