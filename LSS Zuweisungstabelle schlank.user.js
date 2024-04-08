@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LSS Zuweisungstabelle schlank
 // @namespace    www.leitstellenspiel.de
-// @version      1.0
+// @version      1.1
 // @description  Macht die Personalzuweisungstabelle in den Fahrzeugen etwas schlanker
 // @author       MissSobol
 // @match        https://www.leitstellenspiel.de/vehicles/*/zuweisung
@@ -13,7 +13,7 @@
 
     // Funktion zum Aktualisieren des Button-Stylings
     function updateButtonStyling(mutationsList) {
-        console.log("Update Button Styling");
+        //console.log("Update Button Styling");
 
         // Füge den Button-Styling-CSS hinzu
         GM_addStyle(`
@@ -37,14 +37,14 @@
 
                 // Überprüfe, ob das letzte td-Element existiert und ob es einen Button enthält
                 if (lastTd && lastTd.querySelector("a.btn")) {
-                    console.log("Button gefunden");
+                    //console.log("Button gefunden");
 
                     // Wähle den Button im letzten td-Element
                     var button = lastTd.querySelector("a.btn");
 
                     // Überprüfe, ob die Klasse des Buttons "btn-xs" vorhanden ist
                     if (!button.classList.contains("btn-xs")) {
-                        console.log("Button Klasse wird aktualisiert");
+                        //console.log("Button Klasse wird aktualisiert");
                         // Füge der Klasse des Buttons "btn-xs" hinzu
                         button.classList.add("btn-xs");
 
@@ -53,16 +53,16 @@
 
                         // Überprüfe, ob sowohl Button als auch Text existieren
                         if (button && text) {
-                            console.log("Button und Text vorhanden");
+                            //console.log("Button und Text vorhanden");
 
                             // Entferne den Zeilenumbruch zwischen Button und Text
                             if (button.nextSibling && button.nextSibling.nodeName === "#text") {
-                                console.log("Entferne Zeilenumbruch");
+                                //console.log("Entferne Zeilenumbruch");
                                 button.parentNode.removeChild(button.nextSibling);
                             }
                             // Drehe die Reihenfolge von Button und Text um
                             lastTd.insertBefore(button, text);
-                            console.log("Button-Styling aktualisiert");
+                            //console.log("Button-Styling aktualisiert");
                         }
                     }
                 }
